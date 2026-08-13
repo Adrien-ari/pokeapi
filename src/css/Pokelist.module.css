@@ -1,0 +1,155 @@
+:root {
+    --void: #150E05;
+    --panel: #1F1608;
+    --panel-hover: #2A1D0C;
+    --amber: #FFB000;
+    --amber-dim: #8C5A00;
+    --amber-bright: #FFD27A;
+    --text-on-amber: #2C1B00;
+    --scanline: rgba(255, 176, 0, 0.04);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--void);
+    padding: 2.5rem 2rem;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  .poke-header {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 1.75rem;
+    border-bottom: 1px solid var(--amber-dim);
+    padding-bottom: 1rem;
+  }
+
+  .poke-header__title {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 14px;
+    color: var(--amber);
+    letter-spacing: 1px;
+    margin: 0;
+  }
+
+  .poke-header__count {
+    font-size: 12px;
+    color: var(--amber-dim);
+  }
+
+  .poke-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 14px;
+  }
+
+  .poke-card {
+    position: relative;
+    background: var(--panel);
+    border: 1px solid var(--amber-dim);
+    border-radius: 6px;
+    padding: 10px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: border-color 0.15s ease, transform 0.15s ease, background 0.15s ease;
+  }
+
+  .poke-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      to bottom,
+      var(--scanline) 0px,
+      var(--scanline) 1px,
+      transparent 1px,
+      transparent 3px
+    );
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.15s ease;
+  }
+
+  .poke-card:hover {
+    border-color: var(--amber);
+    background: var(--panel-hover);
+    transform: translateY(-2px);
+  }
+
+  .poke-card:hover::before {
+    opacity: 1;
+  }
+
+  .poke-card__top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 4px;
+  }
+
+  .poke-card__id {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 9px;
+    color: var(--amber-dim);
+  }
+
+  .poke-card__led {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--amber);
+    box-shadow: 0 0 4px var(--amber);
+    margin-top: 3px;
+  }
+
+  .poke-card__sprite {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: contain;
+    image-rendering: pixelated;
+    filter: drop-shadow(0 2px 3px rgba(0,0,0,0.4));
+  }
+
+  .poke-card__name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--amber-bright);
+    text-transform: capitalize;
+    margin: 4px 0 6px;
+  }
+
+  .poke-card__types {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+  }
+
+  .poke-type {
+    font-size: 9px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 2px 6px;
+    border-radius: 3px;
+    background: var(--amber-dim);
+    color: #FFE8B8;
+  }
+
+  .poke-type[data-type="fire"]    { background: #7A2E0E; color: #FFC79A; }
+  .poke-type[data-type="water"]   { background: #0E4A6B; color: #A8DBFF; }
+  .poke-type[data-type="grass"]   { background: #2E5E1F; color: #C4E8A8; }
+  .poke-type[data-type="electric"]{ background: #7A6608; color: #FFEE99; }
+  .poke-type[data-type="poison"]  { background: #5A2470; color: #E0B4F5; }
+  .poke-type[data-type="normal"]  { background: #5A5648; color: #E8E4D4; }
+  .poke-type[data-type="bug"]     { background: #4A5A0E; color: #D4E89A; }
+  .poke-type[data-type="flying"]  { background: #3E4A7A; color: #C4CDF5; }
+  .poke-type[data-type="ground"]  { background: #6B4A1E; color: #F0D9A8; }
+  .poke-type[data-type="fairy"]   { background: #7A3355; color: #F5C4DC; }
+  .poke-type[data-type="psychic"] { background: #7A1F4A; color: #F5B4D4; }
+  .poke-type[data-type="fighting"]{ background: #6B1E1E; color: #F0A8A8; }
+  .poke-type[data-type="rock"]    { background: #5E4E1E; color: #E8D49A; }
+  .poke-type[data-type="ghost"]   { background: #38265E; color: #C9A8F5; }
