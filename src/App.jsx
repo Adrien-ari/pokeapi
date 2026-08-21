@@ -1,49 +1,74 @@
 import { useEffect, useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "./assets/vite.svg";
-import heroImg from "./assets/hero.png";
+import { PokeList } from "./Components/PokeList";
 import "./App.css";
-import { PokeCard } from "./Components/PokeCard.jsx";
-import { PokeList } from "./Components/PokeList.jsx";
-function App() {
-   const [data,setData] = useState([]);
-   const [error, setError] = useState(null);
-   const [loading, setLoading] = useState(null);
 
-   useEffect(() => {
-      
-      async function getPokemons(){
-         try{
-            const response = await fetch('https://pokeapi.co/api/v2/pokemon?limit=100&offset=0');
-            
-            if(!response.ok){
-               throw new Error('error ' + response.status);
+function App() {
+  const [pokemons, setPokemons] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    async function getPokemons() {
+      try {
+        const response = await fetch(
+          "https://pokeapi.co/api/v2/pokemon?limit=100"
+        );
+
+        if (!response.ok) {
+          throw new Error(`HTTP error: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        const pokemonDetails = await Promise.all(
+          data.results.map(async (pokemon, index) => {
+            const response = await fetch(pokemon.url);
+
+            if (!response.ok) {
+              throw new Error(`Failed to fetch ${pokemon.name}`);
             }
 
-            let newData = await response.json();
+            const details = await response.json();
 
-            newData.results.map(async (element,index) => {
-                  element.id = index + 1;
-                  const url = element.url;
-                  const response = await fetch(url);
-                  const content = await response.json();
-                  element.url = content.sprites.front_default;
-               }
-            )
-            setData(newData.results);
-         }catch(error){
-            console.log(error);
-         }
+            return {
+              id: index + 1,
+              name: details.name,
+              imageUrl: details.sprites.front_default,
+            };
+          })
+        );
+
+        setPokemons(pokemonDetails);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
       }
-      getPokemons()
-   }, [])
-   if (error) return <p>Data fetching error</p>
-   if (loading) return <p>Datafetch loading</p>
+    }
+
+    getPokemons();
+  }, []);
+
+  if (loading) {
+    return <p className="status">Loading Pokémon...</p>;
+  }
+
+  if (error) {
+    return <p className="status error">Error: {error}</p>;
+  }
+
   return (
-     <>
-        <h1>Pokemon Cards from 1st to 100th pokemon </h1>
-         <PokeList fetchDataResult={data} />
-     </>
+    <main>
+      <header className="hero">
+        <p className="subtitle">PokéAPI · Generation I</p>
+        <h1>Pokémon Collection</h1>
+        <p className="description">
+          Explore the first 100 Pokémon and discover their names and artwork.
+        </p>
+      </header>
+
+      <PokeList pokemons={pokemons} />
+    </main>
   );
 }
 
